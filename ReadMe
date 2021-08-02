@@ -1,3 +1,146 @@
-怎么部署kaldi模型到Android
+怎么才能把kaldi部署在Android呢？我们可能需要在服务器上训练好的kaldi模型，能利用这个模型来解码的kaldi代码，然后kaldi代码不能在Android上运行，所以需要把kaldi代码编译成能在Android上运行的依赖包，基于kaldi模型和kaldi的代码的依赖包，我们就可以编写Android代码生成APK文件了。
 
-啊
+vosk是一个言语识别的工具包[https://github.com/alphacep/vosk-api](https://github.com/alphacep/vosk-api)基于vosk实现的Android demo （[https://github.com/alphacep/vosk-android-demo](https://github.com/alphacep/vosk-android-demo)）可以方便的将kaldi模型部署在手机上。我们可以在[vosk-android-demo](https://github.com/alphacep/vosk-android-demo) ，基础上更换kaldi模型，修改java UI,或者根据要部署的设备不同（x86, arm64 ， armv7，armv8）add kaldi-android aar to dependencies。
+
+[vosk-android-demo](https://github.com/alphacep/vosk-android-demo) is Updated to latest android API .我们可以简单的在这个基础上，更换我们的模型，就可以把kaldi部署在Android上。
+
+接下来我会讲解，利用[vosk-android-demo](https://github.com/alphacep/vosk-android-demo)把kaldi部署在Android上的详细过程。此外，如果我们要把kaldi部署在其他的Android设备上（armv8）我会讲解生成Android归档文件aar的步骤，以及其部署的过程。
+
+使用现有的[vosk-android-demo](https://github.com/alphacep/vosk-android-demo)的部署方法
+
+1.安装Android studio
+
+启动 Android Studio，打开偏好设置，搜索 SDK。打开 SDK Tools 标签页后，我们需要安装一些构建工具：
+
+![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/5cd226b9-13b5-4989-ab17-b7aaeea28df7/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/5cd226b9-13b5-4989-ab17-b7aaeea28df7/Untitled.png)
+
+- `Android SDK Build-Tools`: 30.0.3
+- `NDK`: 22.0.7026061
+- `Android SDK Command-line Tools`: 4.0.0
+- `CMake`: 3.10.2.4988404
+- `Android Emulator`
+- `Android SDK Platform-tool`
+
+2.下载vosk-android-demo 的源代码
+
+找到一下路径vosk-android-demo-master\models\src\main\assets\model-en-us
+
+根据路径下所需要的文件，将我们自己训练好的kaldi模型替换其中文件
+
+所需要文件如下
+
+![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/62751078-98ad-4e50-859c-9f019572d7e7/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/62751078-98ad-4e50-859c-9f019572d7e7/Untitled.png)
+
+需要注意的是需要把words.txt放到vosk-android-demo-master\models\src\main\assets\model-en-us\graph目录下，否则会编译识别。
+
+需要注意HCLr.fst,Gr.fst不同于HCLG.fst文件，
+
+我们需要使用utils/mkgraph_lookahead.sh脚本生成
+
+eg: utils/mkgraph_lookahead.sh /home3/asrxiv/w2021/deliverables/release/msf-scdf-cs-june2021/data/local/lang /home3/yuhang001/w2021/kaldi/egs/aishell/s5/tdnnf-bias
+
+如果脚本运行出错，我们需要运行kaldl/tools/extras/install_opengrm.sh 安装时候如果报错，我们需要把kaldl/tools/openfst-1.7.2 软连接到kaldl/tools/extras/openfst
+
+3.我们还需要准备一台 Android 手机（虚拟机的性能较低）。在手机上开启开发者选项，并且开启 USB 调试选项。准备就绪后，将手机连接电脑。
+
+4.在Android studio中导入vosk-android-demo项目
+
+![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/de4462c2-53f6-4461-9970-7a6d8c48c523/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/de4462c2-53f6-4461-9970-7a6d8c48c523/Untitled.png)
+
+需要注意的是，如果我们模型比较大，我们需要更改gradle.properties
+
+增加org.gradle.jvmargs=-Xmx3048m -XX:MaxPermSize=3048m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8
+
+![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/e6292069-42a1-42a4-9901-c5dc561cbb44/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/e6292069-42a1-42a4-9901-c5dc561cbb44/Untitled.png)
+
+5.编译运行
+
+![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/4f396186-c7a2-44f9-8b11-39d270db021c/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/4f396186-c7a2-44f9-8b11-39d270db021c/Untitled.png)
+
+6.在手机上点击安装，就可以运行
+
+![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/2a31bccf-2680-43dc-a00d-5d871ab38fc2/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/2a31bccf-2680-43dc-a00d-5d871ab38fc2/Untitled.png)
+
+二，我们怎样根据设备生成生成aars 
+
+1.我们首先要安装合适版本的SDK已经NDK，这里根据[vosk-api](https://github.com/alphacep/vosk-api)版本确定的。
+
+android-sdk_r24
+
+wget [http://dl.google.com/android/android-sdk_r24.4.1-linux.tgz](http://dl.google.com/android/android-sdk_r24.4.1-linux.tgz)
+
+tar -zxvf [android-sdk_r24.4.1-linux.tgz](http://dl.google.com/android/android-sdk_r24.4.1-linux.tgz)
+
+修改环境变量
+
+```
+export ANDROID_HOME=/usr/local/android-sdk-linux
+export PATH=$ANDROID_HOME/tools:$PATH
+export PATH=$ANDROID_HOME/platform-tools:$PATH
+```
+
+安装sdk后，需要更新一些依赖包
+
+cd  $yourpath/android-sdk-linux/tools
+
+运行android
+
+寻找需要的依赖包，并安装，需要安装的是28.0.3
+
+![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/7c181bb4-5b28-49ae-ba39-374b6c4d4a83/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/7c181bb4-5b28-49ae-ba39-374b6c4d4a83/Untitled.png)
+
+android-ndk21：
+
+wget [https://dl.google.com/android/repository/android-ndk-r21e-linux-x86_64.zip](https://dl.google.com/android/repository/android-ndk-r21e-linux-x86_64.zip)
+
+unzip  [android-ndk-r21e-linux-x86_64.zip](https://dl.google.com/android/repository/android-ndk-r21e-linux-x86_64.zip)
+
+ln -s yourpath/android-ndk-r21e  $sdkdir/ndk-bundle
+
+或者还需要安装java
+
+wget  [https://www.oracle.com/webapps/redirect/signon?nexturl=https://download.oracle.com/otn/java/jdk/8u301-b09/d3c52aa6bfa54d3ca74e617f18309292/jdk-8u301-linux-i586.tar.gz](https://www.oracle.com/webapps/redirect/signon?nexturl=https://download.oracle.com/otn/java/jdk/8u301-b09/d3c52aa6bfa54d3ca74e617f18309292/jdk-8u301-linux-i586.tar.gz)
+
+理解解压jdk-8u301-linux-x64.tar.gz后
+
+export JAVA_HOME=/media/mipitalk/home/yyh2001/w2021/android/temp/java/jdk1.8.0_301
+export JRE_HOME=$JAVA_HOME/jre
+export CLASSPATH=.:$JAVA_HOME/lib:$JRE_HOME/lib
+export PATH=$JAVA_HOME/bin:$JRE_HOME/bin:$PATH
+
+1. git clone [https://github.com/alphacep/vosk-api](https://github.com/alphacep/vosk-api)
+
+    更改git版本 git checkout 0.3.21
+
+    cd android
+
+    修改local.properties文件sdk.dir=/media/mipitalk/home/yyh2001/w2021/android/temp/sdk/android-sdk-linux
+
+    接下来我们要根据我们的需求修改build.gradle  [build-kaldi.sh](http://build-kaldi.sh/) 
+
+    build.gradle:
+
+    Change abiFilters ‘armeabi-v7a’ to abiFilters ‘arm64-v8a’.
+
+    [build-kaldi.sh](http://build-kaldi.sh/):
+         如果我们只需要arm64上的kaldi代码，
+
+    “for arch in arm64 x86 ; do ”改成 “for arch in arm64  ; do”
+
+    运行gradle build
+
+    会生成android/build/outputs/aar。这就是我们需要的
+
+2. 把aar添加到我们之前windows的vosk-android-demo项目中
+    - 在项目根目录创建aars文件
+    - 将android/build/outputs/aar/vosk-android-release.aar放入aars文件夹中并重命名为kaldi-android-5.2.aar
+    - 在aars目录下创建build.gradle编写
+
+    ```
+    configurations.maybeCreate("default")
+    artifacts.add("default", file('kaldi-android-5.2.aar'))
+    ```
+
+    - 修改settings.gradele 为include ':models', ':app' ,':aars'
+
+4.接下来就可以在Android studio中导入项目
