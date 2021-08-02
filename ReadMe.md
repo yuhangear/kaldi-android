@@ -6,7 +6,7 @@ Vosk is a speech recognition toolkit (https://github.com/alphacep/vosk-api)  and
 
 I'm going to go through the detailed process of deploying Kaldi on Android using Vosk-Android-demo. In addition, IF we are deploying Kaldi on other Android devices (ARMV8), I will walk through the steps to generate an Android archive AAR and the process of deploying it.
 
-Use the existing vosk-Android-Demo deployment method
+**Use the existing vosk-Android-Demo deployment method**
 
 1.Install the Android studio
 
@@ -67,7 +67,7 @@ org.gradle.jvmargs=-Xmx3048m -XX:MaxPermSize=3048m -XX:+HeapDumpOnOutOfMemoryErr
 
 ![Alt text](https://github.com/yuhangear/kaldi-android/blob/main/img/6.png)
 
-二，How do we generate AARS based on device generation
+**二，How do we generate AARS based on device generation**
 
 1.We first need to install the appropriate version of the SDK has the NDK, here according to [the] vosk - API version 
 
