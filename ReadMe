@@ -13,7 +13,7 @@ vosk是一个言语识别的工具包[https://github.com/alphacep/vosk-api](http
 
 启动 Android Studio，打开偏好设置，搜索 SDK。打开 SDK Tools 标签页后，我们需要安装一些构建工具：
 
-![image](https://github.com/yuhangear/kaldi-android/blob/main/img/1.png)
+![avatar](https://github.com/yuhangear/kaldi-android/blob/main/img/1.png)
 
 - `Android SDK Build-Tools`: 30.0.3
 - `NDK`: 22.0.7026061
@@ -29,7 +29,7 @@ vosk是一个言语识别的工具包[https://github.com/alphacep/vosk-api](http
 根据路径下所需要的文件，将我们自己训练好的kaldi模型替换其中文件
 
 所需要文件如下
-![image](https://github.com/yuhangear/kaldi-android/blob/main/img/2.png)
+![avatar](https://github.com/yuhangear/kaldi-android/blob/main/img/2.png)
 
 需要注意的是需要把words.txt放到vosk-android-demo-master\models\src\main\assets\model-en-us\graph目录下，否则会编译识别。
 
@@ -45,21 +45,21 @@ eg: utils/mkgraph_lookahead.sh /home3/asrxiv/w2021/deliverables/release/msf-scdf
 
 4.在Android studio中导入vosk-android-demo项目
 
-![image](https://github.com/yuhangear/kaldi-android/blob/main/img/3.png)
+![avatar](https://github.com/yuhangear/kaldi-android/blob/main/img/3.png)
 
 需要注意的是，如果我们模型比较大，我们需要更改gradle.properties
 
 增加org.gradle.jvmargs=-Xmx3048m -XX:MaxPermSize=3048m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8
 
-![image](https://github.com/yuhangear/kaldi-android/blob/main/img/4.png)
+![avatar](https://github.com/yuhangear/kaldi-android/blob/main/img/4.png)
 
 5.编译运行
 
-![image](https://github.com/yuhangear/kaldi-android/blob/main/img/5.png)
+![avatar](https://github.com/yuhangear/kaldi-android/blob/main/img/5.png)
 
 6.在手机上点击安装，就可以运行
 
-![image](https://github.com/yuhangear/kaldi-android/blob/main/img/6.png)
+![avatar](https://github.com/yuhangear/kaldi-android/blob/main/img/6.png)
 
 二，我们怎样根据设备生成生成aars 
 
