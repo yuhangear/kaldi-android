@@ -89,7 +89,7 @@ After installing the SDK, you need to update some dependency packages
 
 cd  $yourpath/android-sdk-linux/tools
 
-运行android
+run android
 
 Find the required dependencies and install them. 28.0.3 is required
 
@@ -135,7 +135,7 @@ export JAVA_HOME=/media/mipitalk/home/yyh2001/w2021/android/temp/java/jdk1.8.0_3
 
    Run gradle build
 
-   会生成android/build/outputs/aar。这就是我们需要的
+   Generates the android/build/outputs/aar. That's what we need
 
 2. Add aar to our previous Vosk-Android-Demo project for Windows
 
