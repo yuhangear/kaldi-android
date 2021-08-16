@@ -1,8 +1,12 @@
+## Deploy the Kaldi model to Android
+
 How do you deploy Kaldi on Android? We might need to train the Kaldi model on the server, use the model and Kaldi 's code to inference , but the Kaldi code can't run on Android directly , so we need to compile the Kaldi code into a dependency package that can run on Android, based on the Kaldi model and the Kaldi 's code, We can then write Android code to generate the APK file.
 
 Vosk is a speech recognition toolkit (https://github.com/alphacep/vosk-api)  and the vosk-android-demo is an Android demo based on vosk implementation（https://github.com/alphacep/vosk-android-demo）It can help us conveniently deploy the Kaldi model on mobile phones. We can change the Kaldi model based on vosk-Android-Demo，change java UI, or add kaldi-android aar to dependencies depending on the equipment you are deploying（x86, arm64 ， armv7，armv8）
 
 [vosk-android-demo](https://github.com/alphacep/vosk-android-demo) is Updated to latest android API .We can simply change our model on this basis and deploy Kaldi on Android.
+
+and https://github.com/yuhangear/kaldi-android/tree/main/vosk-android which modify the form of hypothesis occurrence of kaldi-android
 
 I'm going to go through the detailed process of deploying Kaldi on Android using Vosk-Android-demo. In addition, IF we are deploying Kaldi on other Android devices (ARMV8), I will walk through the steps to generate an Android archive AAR and the process of deploying it.
 
