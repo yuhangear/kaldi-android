@@ -41,29 +41,24 @@ Launch Android Studio, open preferences, and search for SDK. After opening the S
 
 Find the following path vosk-android-demo-master\models\src\main\assets\model-en-us
 
-According to the required files in the path, replace the files in the Kaldi model trained by us
+According to the required files in the path, find the files in the Kaldi model trained by us
 
 The required files are as follows:
 
 ![Alt text](https://github.com/yuhangear/kaldi-android/blob/main/img/2.png)
 
-It's important to note that you put words.txt here ：
+and put the files in the right place. There are some photos of the need files ( models\src\main\assets\model-en-us)
 
-vosk-android-demo-master\models\src\main\assets\model-en-us\graph
+There are a few things to note:
 
-Otherwise, the compilation will  fails
+- put "words.txt" here ：vosk-android-demo-master\models\src\main\assets\model-en-us\graph
+- "splice_opts" in ivector should be renamed as "splice.conf"
+- if "HCLG.fst" is too big to put it in phone , we can use "HCLr. fst" and "Ge.fst" instead.
+  - we can use "utils/mkgraph_lookahead.sh" to generate the files: 
+  - eg: utils/mkgraph_lookahead.sh  $lang_path $tdnnf_path
+  - if the script is running, we need to run the kaldl/tools/extras/install_opengrm.sh  installation time if an error, We need to put kaldl/tools/openfst - 1.7.2 soft connection to kaldl/tools/extras/openfst
 
-Note that HCLr. fst, Ge.fst is different from HCLG.fst
-
-We need to generate it using the utils/mkgraph_lookahead.sh script
-
-eg: utils/mkgraph_lookahead.sh /home3/asrxiv/w2021/deliverables/release/msf-scdf-cs-june2021/data/local/lang /home3/yuhang001/w2021/kaldi/egs/aishell/s5/tdnnf-bias
-
-Error if the script is running, we need to run the kaldl/tools/extras/install_opengrm.sh  installation time if an error, We need to put kaldl/tools/openfst - 1.7.2 soft connection to kaldl/tools/extras/openfst
-
-3.We also need an Android phone (virtual machine performance is low). Enable developer options on the phone, and enable USB debugging options. When you're ready, connect your phone to your computer.
-
-4.Import the Vosk-Android-Demo project in Android Studio
+3. Import the Vosk-Android-Demo project in Android Studio
 
 ![Alt text](https://github.com/yuhangear/kaldi-android/blob/main/img/3.png)
 
@@ -75,11 +70,13 @@ org.gradle.jvmargs=-Xmx3048m -XX:MaxPermSize=3048m -XX:+HeapDumpOnOutOfMemoryErr
 
 ![Alt text](https://github.com/yuhangear/kaldi-android/blob/main/img/4.png)
 
-5.Compile and run
+4. We also need an Android phone (virtual machine performance is low). Enable developer options on the phone, and enable USB debugging options. When you're ready, connect your phone to your computer.
+
+5. Compile and run
 
 ![Alt text](https://github.com/yuhangear/kaldi-android/blob/main/img/5.png)
 
-6.Click install on your phone and the demo will run
+6. Click install on your phone and the demo will run.(./video/demo.mp4)
 
 ![Alt text](https://github.com/yuhangear/kaldi-android/blob/main/img/6.png)
 
@@ -87,17 +84,18 @@ org.gradle.jvmargs=-Xmx3048m -XX:MaxPermSize=3048m -XX:+HeapDumpOnOutOfMemoryErr
 
 
 
+
+
+**That's the main work, and the next step is to deploy the model on some other device**
+
 **二，How do we generate AARS based on device generation**
 
-1.We first need to install the appropriate version of the SDK has the NDK, here according to [the] vosk - API version 
+1.We first need to install the appropriate version of the SDK has the NDK in the linux , here according to the vosk - API version 
 
-android-sdk_r24
-
-wget http://dl.google.com/android/android-sdk_r24.4.1-linux.tgz
-
-tar -zxvf [android-sdk_r24.4.1-linux.tgz](http://dl.google.com/android/android-sdk_r24.4.1-linux.tgz)
-
-Modifying  ~/.bashre
+- install android-sdk_r24
+- wget http://dl.google.com/android/android-sdk_r24.4.1-linux.tgz
+- tar -zxvf [android-sdk_r24.4.1-linux.tgz](http://dl.google.com/android/android-sdk_r24.4.1-linux.tgz)
+- Modifying  ~/.bashre
 
 ```
 export ANDROID_HOME=/usr/local/android-sdk-linux
@@ -107,57 +105,44 @@ export PATH=$ANDROID_HOME/platform-tools:$PATH
 
 After installing the SDK, you need to update some dependency packages
 
-cd  $yourpath/android-sdk-linux/tools
-
-run android
-
-Find the required dependencies and install them. 28.0.3 is required
++ cd  $yourpath/android-sdk-linux/tools
++ run android
++ Find the required dependencies and install them. 28.0.3 is required
 
 ![Alt text](https://github.com/yuhangear/kaldi-android/blob/main/img/7.png)
 
-android-ndk21：
+2.  In install android-ndk21：
 
-wget https://dl.google.com/android/repository/android-ndk-r21e-linux-x86_64.zip
++ wget https://dl.google.com/android/repository/android-ndk-r21e-linux-x86_64.zip
 
-unzip  [android-ndk-r21e-linux-x86_64.zip](https://dl.google.com/android/repository/android-ndk-r21e-linux-x86_64.zip)
++ unzip  [android-ndk-r21e-linux-x86_64.zip](https://dl.google.com/android/repository/android-ndk-r21e-linux-x86_64.zip)
 
-ln -s yourpath/android-ndk-r21e  $sdkdir/ndk-bundle
++ ln -s yourpath/android-ndk-r21e  $sdkdir/ndk-bundle
 
-Maybe  you need to have Java installed
++ Maybe  you need to have Java installed
 
-wget  https://www.oracle.com/webapps/redirect/signon?nexturl=https://download.oracle.com/otn/java/jdk/8u301-b09/d3c52aa6bfa54d3ca74e617f18309292/jdk-8u301-linux-i586.tar.gz
++ wget  https://www.oracle.com/webapps/redirect/signon?nexturl=https://download.oracle.com/otn/java/jdk/8u301-b09/d3c52aa6bfa54d3ca74e617f18309292/jdk-8u301-linux-i586.tar.gz
 
-Unpack jdk-8u301-linux-x64.tar.gz
++ Unpack jdk-8u301-linux-x64.tar.gz
 
-export JAVA_HOME=/media/mipitalk/home/yyh2001/w2021/android/temp/java/jdk1.8.0_301 export JRE_HOME=$JAVA_HOME/jre export CLASSPATH=.:$JAVA_HOME/lib:$JRE_HOME/lib export PATH=$JAVA_HOME/bin:$JRE_HOME/bin:$PATH
++ export JAVA_HOME=/media/mipitalk/home/yyh2001/w2021/android/temp/java/jdk1.8.0_301 export JRE_HOME=$JAVA_HOME/jre export CLASSPATH=.:$JAVA_HOME/lib:$JRE_HOME/lib export PATH=$JAVA_HOME/bin:$JRE_HOME/bin:$PATH
 
-1. git clone https://github.com/alphacep/vosk-api
 
-   git checkout 0.3.21
 
-   cd android
+3. compile vosk-api
 
-   Modify the local.properties file
+   + git clone https://github.com/alphacep/vosk-api
+   + git checkout 0.3.21
+   + cd android
+   + Modify the local.properties file
+   + sdk.dir=/media/mipitalk/home/yyh2001/w2021/android/temp/sdk/android-sdk-linux
+   + Next, we need to modify build.gradle [build-kaldi.sh](http://build-kaldi.sh/) according to our requirements.
+   +  in "build.gradle"Change abiFilters ‘armeabi-v7a’ to abiFilters ‘arm64-v8a’.
+   + in "[build-kaldi.sh](http://build-kaldi.sh/):" If we just need the Kaldi code on arm64,“for arch in arm64 x86 ; do ” changed to “for arch in arm64  ; do”
+   + Run gradle build
+   + Generates the android/build/outputs/aar. That's what we need
 
-   sdk.dir=/media/mipitalk/home/yyh2001/w2021/android/temp/sdk/android-sdk-linux
-
-   Next, we need to modify build.gradle [build-kaldi.sh](http://build-kaldi.sh/) according to our requirements.
-
-   build.gradle:
-
-   Change abiFilters ‘armeabi-v7a’ to abiFilters ‘arm64-v8a’.
-
-   [build-kaldi.sh](http://build-kaldi.sh/): 
-
-   If we just need the Kaldi code on arm64,
-
-   “for arch in arm64 x86 ; do ” changed to “for arch in arm64  ; do”
-
-   Run gradle build
-
-   Generates the android/build/outputs/aar. That's what we need
-
-2. Add aar to our previous Vosk-Android-Demo project for Windows
+4. Add aar to our previous Vosk-Android-Demo project for Windows
 
    - Create the aars file in the project root directory
    - Put the android/build/outputs/aar/vosk-android-release.aar in the Aars folder and name it kaldi-android-5.2.aar
@@ -171,4 +156,5 @@ export JAVA_HOME=/media/mipitalk/home/yyh2001/w2021/android/temp/java/jdk1.8.0_3
    - change settings.gradele 
    - add: include ':models', ':app' ,':aars'
 
-4. Next, you can import the project in Android Studio
+5. Next, you can import the project in Android Studio
+
