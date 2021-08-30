@@ -10,22 +10,34 @@ and https://github.com/yuhangear/kaldi-android/tree/main/vosk-android which modi
 
 I'm going to go through the detailed process of deploying Kaldi on Android using Vosk-Android-demo. In addition, IF we are deploying Kaldi on other Android devices (ARMV8), I will walk through the steps to generate an Android archive AAR and the process of deploying it.
 
+
+
 **Use the existing vosk-Android-Demo deployment method**
 
-1.Install the Android studio
+1. Install the Android studio 
 
 Launch Android Studio, open preferences, and search for SDK. After opening the SDK Tools TAB, we need to install some build Tools:
 
-![Alt text](https://github.com/yuhangear/kaldi-android/blob/main/img/1.png)
+- ###### download and install Android Studio
 
-- `Android SDK Build-Tools`: 30.0.3
-- `NDK`: 22.0.7026061
-- `Android SDK Command-line Tools`: 4.0.0
-- `CMake`: 3.10.2.4988404
-- `Android Emulator`
-- `Android SDK Platform-tool`
+  - https://redirector.gvt1.com/edgedl/android/studio/install/2020.3.1.23/android-studio-2020.3.1.23-windows.exe
 
-2.Download the source code of Vosk-Android-Demo
+- install some build Tools
+
+  - open : File->Settings->Appearance&Behavior->System Settings->Android SDK
+  - select:
+    - Android11.0(R)
+    - `Android SDK Build-Tools`: 30.0.3
+    - `NDK`: 22.0.7026061
+    - `Android SDK Command-line Tools`: 4.0.0
+    - `CMake`: 3.10.2.4988404
+    - `Android Emulator`
+    - `Android SDK Platform-tool`
+
+  ![Alt text](https://github.com/yuhangear/kaldi-android/blob/main/img/1.png)
+
+2. Download the source code of Vosk-Android-Demo
+   - download: https://codeload.github.com/yuhangear/kaldi-android/zip/refs/heads/main
 
 Find the following path vosk-android-demo-master\models\src\main\assets\model-en-us
 
@@ -70,6 +82,10 @@ org.gradle.jvmargs=-Xmx3048m -XX:MaxPermSize=3048m -XX:+HeapDumpOnOutOfMemoryErr
 6.Click install on your phone and the demo will run
 
 ![Alt text](https://github.com/yuhangear/kaldi-android/blob/main/img/6.png)
+
+
+
+
 
 **二，How do we generate AARS based on device generation**
 
