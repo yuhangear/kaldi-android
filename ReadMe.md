@@ -41,7 +41,7 @@ Launch Android Studio, open preferences, and search for SDK. After opening the S
 
 Find the following path vosk-android-demo-master\models\src\main\assets\model-en-us
 
-According to the required files in the path, find the files in the Kaldi model trained by us
+According to the required files in the path, find the files in the Kaldi model trained by us . if you don't have the trained model. you can use the official existing models which repackaged Librispeech model from [Kaldi](http://kaldi-asr.org/models/m13):  https://alphacephei.com/vosk/models/vosk-model-en-us-librispeech-0.2.zip
 
 The required files are as follows:
 
@@ -52,11 +52,23 @@ and put the files in the right place. There are some photos of the need files ( 
 There are a few things to note:
 
 - put "words.txt" here ：vosk-android-demo-master\models\src\main\assets\model-en-us\graph
+
 - "splice_opts" in ivector should be renamed as "splice.conf"
+
 - if "HCLG.fst" is too big to put it in phone , we can use "HCLr. fst" and "Ge.fst" instead.
   - we can use "utils/mkgraph_lookahead.sh" to generate the files: 
   - eg: utils/mkgraph_lookahead.sh  $lang_path $tdnnf_path
   - if the script is running, we need to run the kaldl/tools/extras/install_opengrm.sh  installation time if an error, We need to put kaldl/tools/openfst - 1.7.2 soft connection to kaldl/tools/extras/openfst
+  
+- If the error  "Dimension mismatch: source features have dimension 91 and LDA #cols is 281" occurs.we should modify mfcc.conf
+
+  - --num-mel-bins=40     # similar to Google's setup.
+
+    --num-ceps=40     # there is no dimensionality reduction.
+
+    --low-freq=40    # low cutoff frequency for mel bins
+
+    --high-freq=-200 # high cutoff frequently,relative to Nyquist of 8000 (=3800)
 
 3. Import the Vosk-Android-Demo project in Android Studio
 
