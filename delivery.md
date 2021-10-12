@@ -4,16 +4,17 @@ The process of deploying the model to Android
 
 + Install Android-Studio on Windows
   + https://redirector.gvt1.com/edgedl/android/studio/install/2020.3.1.23/android-studio-2020.3.1.23-windows.exe
-+ Copy the project files to the Windows system
++ download the project files to the Windows system , and unzip it 
   + https://github.com/yuhangear/kaldi-android/archive/refs/heads/main.zip
 + Package the trained model on the Linux server side with scripts
   + https://github.com/yuhangear/kaldi-android/blob/main/pack_model.sh
 + Place the packed model directory in the project files subdirectory on the Window computer
   + kaldi-android\vosk-android\models\src\main\assets\model-en-us
+  + ![Alt text](https://github.com/yuhangear/kaldi-android/blob/main/img/100.png)
 + Import the project file in Android-Studio, wait for the project build (the first time will automatically download the dependency package)
 + Put your phone into developer mode, connect it to your computer using USB, and hit Run
 
-
+![Alt text](https://github.com/yuhangear/kaldi-android/blob/main/img/3.png)
 
 中文
 
