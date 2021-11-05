@@ -63,6 +63,7 @@ There are a few things to note:
 - If the error  "Dimension mismatch: source features have dimension 91 and LDA #cols is 281" occurs.we should modify mfcc.conf
 
   - --num-mel-bins=40     # similar to Google's setup.
+    
     --sample-frequency=16000  #modify according to the sampling rate
 
     --num-ceps=40     # there is no dimensionality reduction.
